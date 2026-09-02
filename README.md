@@ -11,11 +11,11 @@ Windows x64 でローカル動作する単一の exe に **Tauri** でラッピ�
 
 1. GitHub の **Actions** タブ → `Build Windows wrapper` → **Run workflow**
 2. 必要なら `upstream_ref` に本家のブランチ／タグ／コミットを指定（未指定なら `main`）
-3. 実行完了後、Artifacts から以下をダウンロード
-   - `nmos-patch-gui-wrapper-portable-exe`: インストール不要の単体 exe
-   - `nmos-patch-gui-wrapper-nsis-installer`: インストーラー形式（.exe）
+3. 実行完了後、Artifacts（`vX.Y.Z` タグ push の場合は Releases）から `nmos-patch-gui-wrapper-portable-exe`
+   （インストール不要の単体 exe）をダウンロード
 
-いずれも Windows 10/11 x64 で動作します（WebView2 ランタイムが必要ですが、最近の Windows には標準搭載）。
+Windows 10/11 x64 で動作します（WebView2 ランタイムが必要ですが、最近の Windows には標準搭載）。
+インストーラーは提供していません（単体 exe で十分なため）。
 
 ## 仕組み
 

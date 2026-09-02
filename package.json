@@ -1,7 +1,7 @@
 {
   "name": "nmos-patch-gui-wrapper",
   "private": true,
-  "version": "0.1.0",
+  "version": "2026.6.30",
   "description": "Windows (x64) desktop wrapper for taqq505/nmos-patch-gui, packaged with Tauri via GitHub Actions",
   "scripts": {
     "make-icon": "node scripts/make-icon.mjs",

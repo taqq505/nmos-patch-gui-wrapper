@@ -1,6 +1,6 @@
 [package]
 name = "nmos-patch-gui-wrapper"
-version = "0.1.0"
+version = "2026.6.30"
 description = "Windows desktop wrapper for NMOS Simple BCC (taqq505/nmos-patch-gui)"
 edition = "2021"
 
