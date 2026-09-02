@@ -1,0 +1,12 @@
+# Upstream app source, fetched fresh by CI on every run
+/webapp/
+
+# Node
+/node_modules/
+
+# Rust / Tauri build output
+/src-tauri/target/
+
+# Generated at build time from the upstream favicon
+/src-tauri/icons/
+/icon-source.png

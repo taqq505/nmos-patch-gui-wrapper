@@ -1,0 +1,77 @@
+name: Build Windows wrapper
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "taqq505/nmos-patch-gui branch, tag, or commit to wrap"
+        required: false
+        default: "main"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout this wrapper repo
+        uses: actions/checkout@v4
+
+      - name: Checkout upstream nmos-patch-gui (always fresh)
+        uses: actions/checkout@v4
+        with:
+          repository: taqq505/nmos-patch-gui
+          ref: ${{ github.event.inputs.upstream_ref || 'main' }}
+          path: webapp
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+
+      - name: Install JS tooling (Tauri CLI, icon rasterizer)
+        run: npm ci
+
+      - name: Generate app icons from upstream favicon
+        run: |
+          npm run make-icon -- webapp/favicon.svg icon-source.png
+          npx tauri icon icon-source.png
+
+      - name: Build Tauri app
+        run: npx tauri build
+
+      - name: Upload portable exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: nmos-patch-gui-wrapper-portable-exe
+          path: src-tauri/target/release/*.exe
+          if-no-files-found: error
+
+      - name: Upload NSIS installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: nmos-patch-gui-wrapper-nsis-installer
+          path: src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            src-tauri/target/release/*.exe
+            src-tauri/target/release/bundle/nsis/*.exe
+          generate_release_notes: true
